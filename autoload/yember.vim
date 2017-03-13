@@ -7,3 +7,6 @@ endif
 function! yember#GetTemplatePath()
 	return g:yember_template_path
 endfunction
+
+func! yember#GenerateYuiDocBlock()
+endfunc

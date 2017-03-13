@@ -8,14 +8,10 @@ if exists("g:loaded_yember") || &cp || v:version < 700
 endif
 let g:loaded_yember = 1
 
-function! s:dofunction()
-	call yember#GetTemplatePath()
-endfunction
-
-nnoremap <silent> <Plug>DocumentYUIDocEmberjs :<C-U>call <SID>dofunction()<CR>
+nnoremap <silent> <Plug>GenerateYuiDocBlock :<C-U>call yember#GenerateYuiDocBlock()<CR>
 
 if !exists("g:yember_no_mappings") || ! g:yember_no_mappings
 
-  nmap <F2> <Plug>DocumentYUIDocEmberjs
+  nmap <F2> <Plug>GenerateYuiDocBlock
 
 end
