@@ -4,7 +4,9 @@ if !exists('g:yember_template_path')
 	let g:yember_template_path = s:yember_plugin_path . '/templates/'
 endif
 
+" order matters
 let s:types = [
+	\ yember#attribute#Init(),
 	\ yember#property#Init(),
 	\ yember#default#Init()
 \ ]
