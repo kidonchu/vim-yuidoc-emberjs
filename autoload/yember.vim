@@ -5,7 +5,8 @@ if !exists('g:yember_template_path')
 endif
 
 let s:types = [
-	\ yember#property#Init()
+	\ yember#property#Init(),
+	\ yember#default#Init()
 \ ]
 
 function! yember#GenerateYuiDocBlock()
