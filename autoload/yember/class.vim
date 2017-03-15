@@ -19,20 +19,28 @@ function! yember#class#ParseData(text)
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
 	let l:data["namespace"] = l:matches[2]
-	let l:data["uses"] = l:matches[3]
+	if l:matches[3] != ''
+		let l:data["uses"] = l:matches[3]
+	endif
 
-	let l:filename = expand('%:r')
-	let l:parts = split(l:filename, '-')
-	let l:index = 0
-	let l:transformed = []
-	for l:part in l:parts
-		let l:tmp = substitute(l:part, '\v(\k)(\k*)', '\u\1\2', '')
-		let l:transformed = l:transformed + [l:tmp]
-		let l:index += 1
-	endfor
-
-	let l:data["class"] = join(l:transformed, '')
+	let l:data["class"] = s:GetClass()
 
 	return l:data
+
+endfunction
+
+" Returns class name from current file's name
+function! s:GetClass()
+
+	let l:filename = expand('%:t:r')
+	let l:parts = split(l:filename, '-')
+
+	let l:ret = []
+	for l:part in l:parts
+		let l:upperCased = substitute(l:part, '\v(\k)(\k*)', '\u\1\2', '')
+		call add(l:ret, l:upperCased)
+	endfor
+
+	return join(l:ret, '')
 
 endfunction
