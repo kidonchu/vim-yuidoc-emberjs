@@ -30,7 +30,7 @@ function! s:GetAttrType(typeString)
 	if a:typeString == 'string'
 		return 'String'
 	elseif a:typeString == 'date'
-		return 'Date'
+		return 'String'
 	elseif a:typeString == 'boolean'
 		return 'Boolean'
 	elseif a:typeString == 'number'
