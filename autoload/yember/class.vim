@@ -52,6 +52,14 @@ function! yember#class#ParseData(text)
 		let l:namespace = l:namespace + l:parts[:l:namespaceOffset]
 	endif
 
+	" determine extends
+	let l:extends = l:matches[2]
+	if index(['Route', 'Controller', 'Component', 'Service', 'Helper'], l:extends) != -1
+		let l:data['extends'] = 'Ember.' . l:extends
+	elseif index(['Model'], l:extends) != -1
+		let l:data['extends'] = 'DS.' . l:extends
+	endif
+
 	let l:data['class'] = s:ConvertDashedToTitleCased(l:class)
 	let l:data['namespace'] = s:ConvertToNamespace(l:namespace)
 
