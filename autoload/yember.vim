@@ -9,6 +9,7 @@ let s:types = [
 	\ yember#class#Init(),
 	\ yember#function#Init(),
 	\ yember#attribute#Init(),
+	\ yember#computedp#Init(),
 	\ yember#property#Init(),
 	\ yember#default#Init()
 \ ]
