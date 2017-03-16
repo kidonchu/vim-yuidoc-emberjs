@@ -18,53 +18,71 @@ function! yember#class#ParseData(text)
 
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
-	let l:data["namespace"] = l:matches[2]
 	if l:matches[4] != ''
 		let l:data["uses"] = l:matches[4]
 	endif
 
-	let l:className = s:GetClassFromFilename()
+	let l:parts = split(expand('%:p:r'), '/')
 
+	" find namespace's starting index
+	let l:start = 1
+	for l:part in l:parts
+		if l:part == 'app'
+			break
+		endif
+		let l:start += 1
+	endfor
+
+	" get only the parts relevant to namespace and class
+	let l:parts = l:parts[l:start:]
+
+	" determine class
+	let l:classOffset = -1
 	" if class name is one of generic name, use directory's name for class
-	if index(['Component', 'Route', 'Controller'], l:className) != -1
-		let l:className = s:GetClassFromDirname()
+	if index(['component', 'route', 'controller'], l:parts[-1]) != -1
+		let l:classOffset = -2
+	endif
+	let l:class = l:parts[l:classOffset]
+
+	" determine namespace
+	let l:namespace = [l:matches[2]]
+	let l:namespaceOffset = l:classOffset - 1
+	" check if dir structure needs to be in namespace and append if yes
+	if len(l:parts[:l:namespaceOffset]) > 0
+		let l:namespace = l:namespace + l:parts[:l:namespaceOffset]
 	endif
 
-	let l:data['class'] = l:className
+	let l:data['class'] = s:ConvertDashedToTitleCased(l:class)
+	let l:data['namespace'] = s:ConvertToNamespace(l:namespace)
 
 	return l:data
 
 endfunction
 
-" Returns class name from current file's name
-function! s:GetClassFromFilename()
+" Converts dashed-name into DashedName in TitleCased
+function! s:ConvertDashedToTitleCased(str)
 
-	let l:filename = expand('%:t:r')
-	let l:parts = split(l:filename, '-')
-
-	return s:ConvertDashedName(l:parts)
-
-endfunction
-
-" Returns class name from current file's directory's name
-function! s:GetClassFromDirname()
-
-	let l:dirname = expand('%:h:t')
-	let l:parts = split(l:dirname, '-')
-
-	return s:ConvertDashedName(l:parts)
-
-endfunction
-
-" Converts dashed-name into DashedName in upper camel cases
-function! s:ConvertDashedName(parts)
-	
 	let l:ret = []
-	for l:part in a:parts
+
+	let l:parts = split(a:str, '-')
+	for l:part in l:parts
 		let l:upperCased = substitute(l:part, '\v(\k)(\k*)', '\u\1\2', '')
 		call add(l:ret, l:upperCased)
 	endfor
 
 	return join(l:ret, '')
+	
+endfunction
+
+" Converts a list of parts into namespace string
+function! s:ConvertToNamespace(parts)
+
+	let l:ret = []
+
+	for l:part in a:parts
+		call add(l:ret, s:ConvertDashedToTitleCased(l:part))
+	endfor
+
+	return join(l:ret, '.')
 
 endfunction
