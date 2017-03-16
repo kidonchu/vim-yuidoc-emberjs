@@ -17,3 +17,12 @@ function! yember#util#GuessType(value)
 	endif
 	return ""
 endfunction
+
+function! yember#util#TrimList(parts)
+	let l:trimmed_parts = []
+	for l:part in a:parts
+		let l:trimmed = substitute(l:part, '\v^\s*(.{-})\s*$', '\1', 'e')
+		call add(l:trimmed_parts, l:trimmed)
+	endfor
+	return l:trimmed_parts
+endfunction
