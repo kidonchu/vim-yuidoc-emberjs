@@ -1,4 +1,4 @@
-let s:regex = '\v^(\s*)?export default .{-}(Route|Controller|Model|Service|Mixin|Component)\.(extend|create)\((.{-})?\{'
+let s:regex = '\v^(\s*)?export default .{-}(Route|Controller|Model|Service|Mixin|Component)\.(extend|create)\((.{-})?[, ]*\{'
 
 function! yember#class#Init()
 	return {
@@ -19,7 +19,7 @@ function! yember#class#ParseData(text)
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
 	if l:matches[4] != ''
-		let l:data["uses"] = l:matches[4]
+		let l:data["uses"] = s:ParseUses(l:matches[4])
 	endif
 
 	let l:parts = split(expand('%:p:r'), '/')
@@ -64,6 +64,21 @@ function! yember#class#ParseData(text)
 	let l:data['namespace'] = s:ConvertToNamespace(l:namespace)
 
 	return l:data
+
+endfunction
+
+" Parses and generates a list of @uses
+function! s:ParseUses(text)
+	
+	let l:parts = split(a:text, ',')
+	let l:parts =  yember#util#TrimList(l:parts)
+	
+	let l:ret = []
+	for l:part in l:parts
+		call add(l:ret, {'item': 'Mixin.' . l:part})
+	endfor
+
+	return l:ret
 
 endfunction
 
