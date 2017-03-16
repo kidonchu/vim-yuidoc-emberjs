@@ -23,20 +23,44 @@ function! yember#class#ParseData(text)
 		let l:data["uses"] = l:matches[4]
 	endif
 
-	let l:data["class"] = s:GetClass()
+	let l:className = s:GetClassFromFilename()
+
+	" if class name is one of generic name, use directory's name for class
+	if index(['Component', 'Route', 'Controller'], l:className) != -1
+		let l:className = s:GetClassFromDirname()
+	endif
+
+	let l:data['class'] = l:className
 
 	return l:data
 
 endfunction
 
 " Returns class name from current file's name
-function! s:GetClass()
+function! s:GetClassFromFilename()
 
 	let l:filename = expand('%:t:r')
 	let l:parts = split(l:filename, '-')
 
+	return s:ConvertDashedName(l:parts)
+
+endfunction
+
+" Returns class name from current file's directory's name
+function! s:GetClassFromDirname()
+
+	let l:dirname = expand('%:h:t')
+	let l:parts = split(l:dirname, '-')
+
+	return s:ConvertDashedName(l:parts)
+
+endfunction
+
+" Converts dashed-name into DashedName in upper camel cases
+function! s:ConvertDashedName(parts)
+	
 	let l:ret = []
-	for l:part in l:parts
+	for l:part in a:parts
 		let l:upperCased = substitute(l:part, '\v(\k)(\k*)', '\u\1\2', '')
 		call add(l:ret, l:upperCased)
 	endfor
