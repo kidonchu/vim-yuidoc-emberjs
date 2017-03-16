@@ -1,4 +1,4 @@
-let s:regex = '\v^(\s*)(\S+):\s+DS\.attr\([''"]?(.{-})[''"]?\),?$'
+let s:regex = '\v^(\s*)(\S+):\s+(DS\.)?attr\([''"]?(.{-})[''"]?\),?$'
 
 function! yember#attribute#Init()
 	return {
@@ -19,7 +19,7 @@ function! yember#attribute#ParseData(text)
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
 	let l:data["name"] = l:matches[2]
-	let l:data["type"] = s:GetAttrType(l:matches[3])
+	let l:data["type"] = s:GetAttrType(l:matches[4])
 
 	return l:data
 
