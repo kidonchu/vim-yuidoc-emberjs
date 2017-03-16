@@ -1,4 +1,4 @@
-let s:regex = '\v^(\s*)?export default .{-}(Route|Controller|Model|Service|Mixin|Component)\.extend\((.{-})?\{'
+let s:regex = '\v^(\s*)?export default .{-}(Route|Controller|Model|Service|Mixin|Component)\.(extend|create)\((.{-})?\{'
 
 function! yember#class#Init()
 	return {
@@ -19,8 +19,8 @@ function! yember#class#ParseData(text)
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
 	let l:data["namespace"] = l:matches[2]
-	if l:matches[3] != ''
-		let l:data["uses"] = l:matches[3]
+	if l:matches[4] != ''
+		let l:data["uses"] = l:matches[4]
 	endif
 
 	let l:data["class"] = s:GetClass()
