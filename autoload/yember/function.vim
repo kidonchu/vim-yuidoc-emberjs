@@ -1,5 +1,7 @@
 let s:fnRegex = '\v^(\s*)(\S+)+:\s?function\('
+let s:altFnRegex = '\v^(\s*)(\S+)\s?\('
 let s:paramRegex = '\v\s*\S+:\s?function\(([^\)]{-})\)\s?\{'
+let s:altParamRegex = '\v\s*\S+\s?\(([^\)]{-})\)\s?\{'
 
 function! yember#function#Init()
 	return {
@@ -10,7 +12,7 @@ function! yember#function#Init()
 endfunction
 
 function! yember#function#IsMatch(text)
-	return (match(a:text, s:fnRegex) > -1)
+	return (match(a:text, s:fnRegex) > -1) || (match(a:text, s:altFnRegex) > -1)
 endfunction
 
 function! yember#function#ParseData(text)
@@ -25,6 +27,9 @@ endfunction
 function! s:ParseBasicData(text)
 
 	let l:matches = matchlist(a:text, s:fnRegex)
+	if len(l:matches) == 0
+		let l:matches = matchlist(a:text, s:altFnRegex)
+	endif
 
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
@@ -37,6 +42,9 @@ endfunction
 function! s:ParseParameterData(text)
 
 	let l:matches = matchlist(a:text, s:paramRegex)
+	if len(l:matches) == 0
+		let l:matches = matchlist(a:text, s:altParamRegex)
+	endif
 
 	" extract a list of params
 	let l:params = split(l:matches[1], ',')
@@ -46,7 +54,7 @@ function! s:ParseParameterData(text)
 	for l:param in l:params
 		let l:data = {}
 		let l:data['name'] = l:param
-		let l:data['type'] = 'mixed'
+		let l:data['type'] = 'Mixed'
 		call add(l:parameters, l:data)
 	endfor
 
