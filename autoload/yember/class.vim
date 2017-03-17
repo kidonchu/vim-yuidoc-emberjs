@@ -1,4 +1,6 @@
-let s:regex = '\v^(\s*)?export default .{-}(Route|Controller|Model|Service|Mixin|Component)\.(extend|create)\((.{-})?[, ]*\{'
+let s:types = [ 'Route', 'Controller', 'Model', 'Service', 'Mixin', 'Component', 'Helper' ]
+
+let s:regex = '\v^(\s*)?export default .{-}('.join(s:types, '|').')\.(extend|create|helper)\((.{-})?[, ]*[\{\)]'
 
 function! yember#class#Init()
 	return {
@@ -18,7 +20,8 @@ function! yember#class#ParseData(text)
 
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
-	if l:matches[4] != ''
+	if l:matches[4] != '' && l:matches[2] != 'Helper'
+		" there is no @uses tag for Helper
 		let l:data["uses"] = s:ParseUses(l:matches[4])
 	endif
 
@@ -103,7 +106,10 @@ function! s:ConvertToNamespace(parts)
 	let l:ret = []
 
 	for l:part in a:parts
-		call add(l:ret, s:ConvertDashedToTitleCased(l:part))
+		" don't include dir names for the ones that don't follow convention
+		if index(['helpers'], l:part) == -1
+			call add(l:ret, s:ConvertDashedToTitleCased(l:part))
+		endif
 	endfor
 
 	return join(l:ret, '.')
