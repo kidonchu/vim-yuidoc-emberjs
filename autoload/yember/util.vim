@@ -15,6 +15,9 @@ function! yember#util#GuessType(value)
 	if a:value =~ '\v(true|false)'
 		return "Boolean"
 	endif
+	if a:value =~ '\v^\{'
+		return "Object"
+	endif
 	return ""
 endfunction
 
