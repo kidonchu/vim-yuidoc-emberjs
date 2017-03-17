@@ -6,7 +6,7 @@ function! yember#util#GuessType(value)
 	if a:value =~ '\v^['
 		return "Array"
 	endif
-	if a:value =~ '\v^[0-9.]+'
+	if a:value =~ '\v^[-0-9\.]+'
 		return "Number"
 	endif
 	if a:value =~ '\v[''"].*[''"]'
