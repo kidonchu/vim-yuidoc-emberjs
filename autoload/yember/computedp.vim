@@ -1,12 +1,20 @@
+let s:methods = [
+	\ 'alias', 'and', 'bool', 'collect', 'deprecatingAlias', 'empty',
+	\ 'equal', 'filter', 'filterBy', 'gt', 'gte', 'intersect', 'lt',
+	\ 'lte', 'map', 'mapBy', 'match', 'max', 'min', 'none', 'not',
+	\ 'notEmpty', 'oneWay', 'or', 'readOnly', 'reads', 'setDiff',
+	\ 'sort', 'sum', 'union', 'uniq', 'uniqBy', 'computed'
+\ ]
+
 " propertyName: Ember.computed('p1', 'p2', function(){})
-let s:regex = '\v^(\s*)(\S+):\s+(Ember\.)?computed\('
+let s:regex = '\v^(\s*)(\S+):\s+(Ember\.)?('.join(s:methods, '|').')\('
 
 function! yember#computedp#Init()
 	return {
-				\ 'is_match': function('yember#computedp#IsMatch'),
-				\ 'parse_data': function('yember#computedp#ParseData'),
-				\ 'template': 'computedp.tpl'
-				\ }
+		\ 'is_match': function('yember#computedp#IsMatch'),
+		\ 'parse_data': function('yember#computedp#ParseData'),
+		\ 'template': 'computedp.tpl'
+	\ }
 endfunction
 
 function! yember#computedp#IsMatch(text)
