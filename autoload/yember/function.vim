@@ -1,7 +1,10 @@
 let s:fnRegex = '\v^(\s*)(\S+)+:\s?function\('
 let s:altFnRegex = '\v^(\s*)(\S+)\s?\('
+let s:alt2FnRegex = '\v^(\s*)function\s+(\S+)\('
 let s:paramRegex = '\v\s*\S+:\s?function\(([^\)]{-})\)\s?\{'
 let s:altParamRegex = '\v\s*\S+\s?\(([^\)]{-})\)\s?\{'
+let s:alt2FnRegex = '\v^(\s*)function\s+(\S+)\(.{-}\)\s?\{'
+let s:alt2ParamRegex = '\v\s*function\s+\S+\((.{-})\)\s?\{'
 
 function! yember#function#Init()
 	return {
@@ -12,7 +15,9 @@ function! yember#function#Init()
 endfunction
 
 function! yember#function#IsMatch(text)
-	return (match(a:text, s:fnRegex) > -1) || (match(a:text, s:altFnRegex) > -1)
+	return (match(a:text, s:fnRegex) > -1) || 
+		\ (match(a:text, s:altFnRegex) > -1) ||
+		\ (match(a:text, s:alt2FnRegex) > -1)
 endfunction
 
 function! yember#function#ParseData(text)
@@ -30,6 +35,9 @@ function! s:ParseBasicData(text)
 	if len(l:matches) == 0
 		let l:matches = matchlist(a:text, s:altFnRegex)
 	endif
+	if len(l:matches) == 0
+		let l:matches = matchlist(a:text, s:alt2FnRegex)
+	endif
 
 	let l:data = {}
 	let l:data["indent"] = l:matches[1]
@@ -44,6 +52,9 @@ function! s:ParseParameterData(text)
 	let l:matches = matchlist(a:text, s:paramRegex)
 	if len(l:matches) == 0
 		let l:matches = matchlist(a:text, s:altParamRegex)
+	endif
+	if len(l:matches) == 0
+		let l:matches = matchlist(a:text, s:alt2ParamRegex)
 	endif
 
 	" extract a list of params
