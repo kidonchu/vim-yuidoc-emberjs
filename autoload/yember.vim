@@ -7,6 +7,7 @@ endif
 " order matters
 let s:types = [
 	\ yember#class#Init(),
+	\ yember#event#Init(),
 	\ yember#function#Init(),
 	\ yember#attribute#Init(),
 	\ yember#computedp#Init(),
