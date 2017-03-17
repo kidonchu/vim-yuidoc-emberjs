@@ -1,8 +1,8 @@
 /**${0}
  *
- * \{\{#dependsOn}}
+ * \{\{#dependentProperties}}
  * ${3}
- * \{\{/dependsOn}}
+ * \{\{/dependentProperties}}
  *
  * @property ${1:{{name}}}
  * @type {${2:Mixed}}
