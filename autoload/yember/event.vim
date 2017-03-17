@@ -52,7 +52,7 @@ function! s:ParseParameterData(text)
 
 	" extract a list of params
 	let l:params = split(l:matches[1], ',')
-	let l:params = map(l:params, substitute('v:val', '\v^\s*(\S*)\s*$', '\1', 'e'))
+	let l:params =  yember#util#TrimList(l:params)
 
 	let l:parameters = []
 	for l:param in l:params
